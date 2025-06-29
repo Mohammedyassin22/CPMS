@@ -1,9 +1,13 @@
 
+using Domain;
+using Microsoft.EntityFrameworkCore;
+using Presistence;
+
 namespace CPMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,12 @@ namespace CPMS
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<CPMSDbContext>(option =>
+            {
+                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddScoped<IDbIntilaizer, DbIntilaizer>();
 
             var app = builder.Build();
 
@@ -22,6 +32,9 @@ namespace CPMS
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            using var scope = app.Services.CreateScope();
+            var dbintilaizer = scope.ServiceProvider.GetService<IDbIntilaizer>();
+            await dbintilaizer.IntilaizerAsync();
 
             app.UseHttpsRedirection();
 
@@ -32,5 +45,5 @@ namespace CPMS
 
             app.Run();
         }
-    }
+    }      
 }
