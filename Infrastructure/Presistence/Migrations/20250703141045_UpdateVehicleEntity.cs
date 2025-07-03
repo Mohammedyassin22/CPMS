@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Presistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class UpdateVehicleEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -92,17 +92,23 @@ namespace Presistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PlateNumber = table.Column<int>(type: "int", nullable: false),
-                    VehicleType = table.Column<int>(type: "int", nullable: false),
-                    OwnerIdId = table.Column<int>(type: "int", nullable: false)
+                    PlateNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VehicleTypeId = table.Column<int>(type: "int", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_vehicles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_vehicles_vehicleOwners_OwnerIdId",
-                        column: x => x.OwnerIdId,
+                        name: "FK_vehicles_vehicleOwners_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "vehicleOwners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_vehicles_vehicleTypes_VehicleTypeId",
+                        column: x => x.VehicleTypeId,
+                        principalTable: "vehicleTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -215,9 +221,14 @@ namespace Presistence.Migrations
                 column: "VehicleTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_vehicles_OwnerIdId",
+                name: "IX_vehicles_OwnerId",
                 table: "vehicles",
-                column: "OwnerIdId");
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_vehicles_VehicleTypeId",
+                table: "vehicles",
+                column: "VehicleTypeId");
         }
 
         /// <inheritdoc />

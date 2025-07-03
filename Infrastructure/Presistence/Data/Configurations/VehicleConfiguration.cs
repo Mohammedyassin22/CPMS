@@ -13,7 +13,7 @@ namespace Presistence.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-            builder.HasOne(x=>x.OwnerId).WithMany(x=>x.Vehicles).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x=>x.Owner).WithMany(x=>x.Vehicles).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x=>x.ParkingRecords).WithOne(x=>x.Vehicle).OnDelete(DeleteBehavior.Cascade);
         }
     }

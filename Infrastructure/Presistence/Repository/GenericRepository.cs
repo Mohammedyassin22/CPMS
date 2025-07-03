@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,12 @@ namespace Presistence.Repository
         {
            dbContext.Remove(entity);
         }
+
+        public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        } 
+       
         public async Task<IEnumerable<TEntity>> GetAllAsync(bool trackchange = false)
         {
             if (trackchange)
