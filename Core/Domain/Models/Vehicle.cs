@@ -9,9 +9,12 @@ namespace Domain.Models
 {
     public class Vehicle : BaseEntity<int>
     {
-        public int PlateNumber { get; set; }
-        public int VehicleType { get; set; }
-        public VehicleOwner OwnerId { get; set; }
+        public string PlateNumber { get; set; }     
+        public int VehicleTypeId { get; set; }
+        public VehicleType VehicleType { get; set; }
+        public int OwnerId { get; set; }
+        public VehicleOwner Owner { get; set; }     
         public Collection<ParkingRecord> ParkingRecords { get; set; }
     }
+
 }

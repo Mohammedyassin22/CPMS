@@ -12,8 +12,8 @@ using Presistence;
 namespace Presistence.Migrations
 {
     [DbContext(typeof(CPMSDbContext))]
-    [Migration("20250629133945_Initial Create")]
-    partial class InitialCreate
+    [Migration("20250703141045_UpdateVehicleEntity")]
+    partial class UpdateVehicleEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,18 +162,21 @@ namespace Presistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OwnerIdId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PlateNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PlateNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VehicleType")
+                    b.Property<int>("VehicleTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerIdId");
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("VehicleTypeId");
 
                     b.ToTable("vehicles");
                 });
@@ -283,13 +286,21 @@ namespace Presistence.Migrations
 
             modelBuilder.Entity("Domain.Models.Vehicle", b =>
                 {
-                    b.HasOne("Domain.Models.VehicleOwner", "OwnerId")
+                    b.HasOne("Domain.Models.VehicleOwner", "Owner")
                         .WithMany("Vehicles")
-                        .HasForeignKey("OwnerIdId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OwnerId");
+                    b.HasOne("Domain.Models.VehicleType", "VehicleType")
+                        .WithMany()
+                        .HasForeignKey("VehicleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("VehicleType");
                 });
 
             modelBuilder.Entity("Domain.Models.VehicleOwner", b =>

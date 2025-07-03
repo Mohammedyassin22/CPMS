@@ -159,18 +159,21 @@ namespace Presistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OwnerIdId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PlateNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PlateNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VehicleType")
+                    b.Property<int>("VehicleTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerIdId");
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("VehicleTypeId");
 
                     b.ToTable("vehicles");
                 });
@@ -280,13 +283,21 @@ namespace Presistence.Migrations
 
             modelBuilder.Entity("Domain.Models.Vehicle", b =>
                 {
-                    b.HasOne("Domain.Models.VehicleOwner", "OwnerId")
+                    b.HasOne("Domain.Models.VehicleOwner", "Owner")
                         .WithMany("Vehicles")
-                        .HasForeignKey("OwnerIdId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OwnerId");
+                    b.HasOne("Domain.Models.VehicleType", "VehicleType")
+                        .WithMany()
+                        .HasForeignKey("VehicleTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("VehicleType");
                 });
 
             modelBuilder.Entity("Domain.Models.VehicleOwner", b =>

@@ -11,8 +11,8 @@ namespace Shared
     public class VehicleDto
     {
         public int Id { get; set; }
-        public int PlateNumber { get; set; }
-        public int VehicleType { get; set; }
+        public string PlateNumber { get; set; }
+        public string VehicleType { get; set; }
         public string OwnerNAme { get; set; }
 
     }
