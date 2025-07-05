@@ -1,7 +1,11 @@
-
 using Domain;
+using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Presistence;
+using Service;
+using ServiceAbstraction;
+using System.Reflection;
 
 namespace CPMS
 {
@@ -23,6 +27,10 @@ namespace CPMS
             });
 
             builder.Services.AddScoped<IDbIntilaizer, DbIntilaizer>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.AddAutoMapper(typeof(MappingAssemblyReference).Assembly);
 
             var app = builder.Build();
 

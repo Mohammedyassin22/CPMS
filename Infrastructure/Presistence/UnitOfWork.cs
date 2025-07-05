@@ -10,11 +10,24 @@ using System.Threading.Tasks;
 
 namespace Presistence
 {
-    public class UnitOfWork(CPMSDbContext dbContext,ConcurrentDictionary<string,object> valuePairs) : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        public  IGenericRebository<TEntity, TKey> GetRebository<TEntity, TKey>() where TEntity : BaseEntity<TKey>
-        => (IGenericRebository<TEntity, TKey>)valuePairs.GetOrAdd(typeof(TEntity).Name, new GenericRepository<TEntity, TKey>(dbContext));
+        private readonly CPMSDbContext dbContext;
 
+        private readonly ConcurrentDictionary<string, object> valuePairs = new();
+
+        public UnitOfWork(CPMSDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
+        public IGenericRebository<TEntity, TKey> GetRebository<TEntity, TKey>()
+            where TEntity : BaseEntity<TKey>
+        {
+            return (IGenericRebository<TEntity, TKey>)valuePairs.GetOrAdd(
+                typeof(TEntity).Name,
+                new GenericRepository<TEntity, TKey>(dbContext));
+        }
         public async Task<int> SaveChangeAsync()
         {
             return await dbContext.SaveChangesAsync();
