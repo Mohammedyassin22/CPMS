@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Presentation
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] 
     public class VehicleController(IServiceManager serviceManager):ControllerBase
     {
         [HttpGet]

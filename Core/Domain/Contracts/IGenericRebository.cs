@@ -13,6 +13,11 @@ namespace Domain.Contracts
         Task<TEntity?> GetAsync(TKey Id);
         Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllAsync(bool trackchange = false);
+
+        Task<TEntity?> GetAsync(ISpecification<TEntity,TKey>spec); 
+        Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity, TKey> spec,bool trackchange = false);
+        Task<TEntity?> FindAsync(ISpecification<TEntity, TKey> spec);
+
         Task AddAsync(TEntity entity);
         void Update (TEntity entity);
         void Delete (TEntity entity);
