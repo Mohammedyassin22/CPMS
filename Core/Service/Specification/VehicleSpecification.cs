@@ -14,13 +14,15 @@ namespace Service.Specification
             AddInclude(x => x.Owner);
             AddInclude(x => x.VehicleType);
         }
-        public VehicleSpecification(string platnum) : base(x=>x.PlateNumber==platnum)
+        public VehicleSpecification(string platnum, bool isPlateNumber)
+     : base(x => x.PlateNumber == platnum)
         {
             ApplyIncludes();
         }
-        public VehicleSpecification() : base(null)
+        public VehicleSpecification(string? type): base(x => string.IsNullOrWhiteSpace(type) || x.VehicleType.TypeName == type)
         {
             ApplyIncludes();
         }
+
     }
 }
