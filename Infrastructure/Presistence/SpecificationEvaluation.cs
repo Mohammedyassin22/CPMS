@@ -21,6 +21,18 @@ namespace Presistence
                 query = query.Where(spec.criterial);
                 query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
             }
+            if (spec.OrderBy is not null)
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+            else if(spec.OrderByDescending is not null)
+            {
+                query = query.OrderByDescending(spec.OrderByDescending);
+            }   
+            if (spec.isPagingEnabled)
+            {
+                query = query.Skip(spec.skip).Take(spec.take);
+            }
             return query;
         }
    }
