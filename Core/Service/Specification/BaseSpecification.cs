@@ -1,6 +1,7 @@
 ﻿using Domain.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.ConstrainedExecution;
@@ -20,6 +21,27 @@ namespace Service.Specification
         public void AddInclude(Expression<Func<TEntity, object>> includeExpression)
         {
             Includes.Add(includeExpression);
+        }
+
+        public Expression<Func<TEntity, object>>? OrderBy { get ; set ; }
+        public Expression<Func<TEntity, object>>? OrderByDescending { get; set; }
+        protected void AddOrderBy(Expression<Func<TEntity, object>> expression)
+        {
+            OrderBy= expression;
+        }
+        protected void AddOrderByDesc(Expression<Func<TEntity, object>> includeExpression)
+        {
+            OrderByDescending=includeExpression;
+        }
+
+        public int skip { get ; set; }
+        public int take { get ; set; }
+        public bool isPagingEnabled { get; set ; }
+        protected void ApplyPaging(int pageindex, int pagesize)
+        {
+            isPagingEnabled = true;
+            take = pagesize;
+            skip = (pageindex - 1) * pagesize;
         }
     }
 }

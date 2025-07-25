@@ -22,9 +22,9 @@ namespace Service
             return result;
         }
 
-        public async Task<IEnumerable<VehicleDto>> GetAllVehiclesAsync(string type)
+        public async Task<IEnumerable<VehicleDto>> GetAllVehiclesAsync(VehicleSpecificationParameter specvehicle)
         {
-            var spec= new VehicleSpecification(type);
+            var spec= new VehicleSpecification(specvehicle);
             var vehicles = await unitOfWork.GetRebository<Vehicle, int>().GetAllAsync(spec);
             var result=mapper.Map<IEnumerable<VehicleDto>>(vehicles);
             return result;

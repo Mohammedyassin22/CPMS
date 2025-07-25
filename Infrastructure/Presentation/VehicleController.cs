@@ -14,9 +14,9 @@ namespace Presentation
     public class VehicleController(IServiceManager serviceManager):ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetAllVehcile(string? type)
+        public async Task<IActionResult> GetAllVehcile([FromQuery]VehicleSpecificationParameter specvehicle)
         {
-            var result =await serviceManager.VehicleService.GetAllVehiclesAsync(type);
+            var result =await serviceManager.VehicleService.GetAllVehiclesAsync(specvehicle);
             if (result is null)
                 return BadRequest();
             return Ok(result);  
