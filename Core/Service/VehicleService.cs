@@ -22,12 +22,14 @@ namespace Service
             return result;
         }
 
-        public async Task<IEnumerable<VehicleDto>> GetAllVehiclesAsync(VehicleSpecificationParameter specvehicle)
+        public async Task<PaginationResponse<VehicleDto>> GetAllVehiclesAsync(VehicleSpecificationParameter specvehicle)
         {
             var spec= new VehicleSpecification(specvehicle);
+            var speccount = new VehicleCountSpecification(specvehicle);
+            var count = await unitOfWork.GetRebository<Vehicle, int>().CountAsync(spec);
             var vehicles = await unitOfWork.GetRebository<Vehicle, int>().GetAllAsync(spec);
             var result=mapper.Map<IEnumerable<VehicleDto>>(vehicles);
-            return result;
+            return new PaginationResponse<VehicleDto>(specvehicle, specvehicle.IndexPage, specvehicle.PageSize, count,result);
         }
 
         public async Task<VehicleDto?> GetVehicleByNumberAsync(string plateNumber)

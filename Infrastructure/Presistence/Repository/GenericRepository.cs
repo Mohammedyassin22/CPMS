@@ -69,6 +69,10 @@ namespace Presistence.Repository
         {
           return SpecificationEvaluation.GetQuery(dbContext.Set<TEntity>(), spec);
         }
-        
+
+        public async Task<int> CountAsync(ISpecification<TEntity, TKey> spec)
+        {
+            return await ApplicationsException(spec).CountAsync() ;
+        }
     }
 }
