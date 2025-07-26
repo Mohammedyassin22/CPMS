@@ -11,7 +11,8 @@ namespace Service.Specification
     public class VehicleCountSpecification:BaseSpecification<Vehicle,int>
     {
         public VehicleCountSpecification(VehicleSpecificationParameter specvehicle):
-           base(x => string.IsNullOrEmpty(specvehicle.type) || x.VehicleType.TypeName == specvehicle.type)
+          base(x => (string.IsNullOrEmpty(specvehicle.search) || x.VehicleType.TypeName.ToLower().Contains(specvehicle.search.ToLower())) &&
+            string.IsNullOrWhiteSpace(specvehicle.type) || x.VehicleType.TypeName == specvehicle.type)
         {
 
         }
