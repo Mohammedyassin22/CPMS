@@ -21,7 +21,8 @@ namespace Service.Specification
             ApplyIncludes();
         }
         public VehicleSpecification(VehicleSpecificationParameter specvehicle) :
-         base(x => string.IsNullOrWhiteSpace(specvehicle.type) || x.VehicleType.TypeName == specvehicle.type)
+         base(x => (string.IsNullOrEmpty(specvehicle.search) || x.VehicleType.TypeName.ToLower().Contains(specvehicle.search.ToLower())) &&
+            string.IsNullOrWhiteSpace(specvehicle.type) || x.VehicleType.TypeName == specvehicle.type)
         {
             ApplyIncludes();
            ApplySorting(specvehicle.sort);
