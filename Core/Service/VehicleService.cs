@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Exceptions;
 using Domain.Models;
 using Service.Specification;
 using ServiceAbstraction;
@@ -19,6 +20,10 @@ namespace Service
             var spec = new VehicleSpecification(VehicleType);   
             var type = await unitOfWork.GetRebository<Vehicle, int>().FindAsync(spec);
             var result = mapper.Map<IEnumerable<VehicleDto>>(type);
+            if (result is null)
+            {
+                throw  new VehicleNotFoundException(VehicleType);
+            }
             return result;
         }
 
@@ -52,5 +57,6 @@ namespace Service
             return result;
         }
 
+       
     }
 }
