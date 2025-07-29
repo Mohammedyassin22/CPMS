@@ -1,10 +1,13 @@
+using CPMS.MiddleWare;
 using Domain;
 using Domain.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Presistence;
 using Service;
 using ServiceAbstraction;
+using Shared.ErrorModels;
 using System.Reflection;
 
 namespace CPMS
@@ -32,6 +35,28 @@ namespace CPMS
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddAutoMapper(typeof(MappingAssemblyReference).Assembly);
 
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState
+                        .Where(x => x.Value.Errors.Any())
+                        .Select(x => new ValidationError
+                        {
+                            field = x.Key,
+                            errors = x.Value.Errors.Select(e => e.ErrorMessage)
+                        }).ToList();
+
+                    var response = new ValidationErrorResponse
+                    {
+                        Errors = errors
+                    };
+
+                    return new BadRequestObjectResult(response);
+                };
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -48,6 +73,7 @@ namespace CPMS
 
             app.UseAuthorization();
 
+            app.UseMiddleware<GlobalErrorMiddleWare>();
 
             app.MapControllers();
 
