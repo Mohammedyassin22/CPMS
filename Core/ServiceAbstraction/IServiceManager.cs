@@ -9,5 +9,6 @@ namespace ServiceAbstraction
     public interface IServiceManager
     {
         IVehicleService VehicleService { get; }
+        ICacheService CacheService { get; }
     }
 }
