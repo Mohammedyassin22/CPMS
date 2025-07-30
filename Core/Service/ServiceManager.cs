@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    public class ServiceManager(IUnitOfWork unitOfWork, IMapper mapper) : IServiceManager
+    public class ServiceManager(IUnitOfWork unitOfWork, IMapper mapper,ICacheRepository repository) : IServiceManager
     {
-        public IVehicleService VehicleService => new VehicleService(unitOfWork, mapper);
-        
+        public IVehicleService VehicleService { get; }= new VehicleService(unitOfWork, mapper);
+        public ICacheService CacheService { get; } = new CacheServices(repository);
     }
 }

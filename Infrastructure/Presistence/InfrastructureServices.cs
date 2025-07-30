@@ -1,8 +1,10 @@
 ﻿using Domain;
 using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Presistence.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +26,8 @@ namespace Presistence
             services.AddScoped<IDbIntilaizer, DbIntilaizer>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<ICacheRepository, CacheRepository>();
 
             return services;
         }
