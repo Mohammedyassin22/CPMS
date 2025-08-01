@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Presistence;
+using Presistence.Repository;
 using Service;
 using ServiceAbstraction;
 using Shared.ErrorModels;
@@ -22,6 +23,7 @@ namespace CPMS
             // Add services to the container.
 
             builder.Services.Register(builder.Configuration);
+           
 
 
             var app = builder.Build();

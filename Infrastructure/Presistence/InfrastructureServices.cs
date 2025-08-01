@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Presistence.Identity;
 using Presistence.Repository;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,13 @@ namespace Presistence
             {
                 option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddDbContext<CPMS_Identity>(option =>
+            {
+                option.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
+            });
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+            ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection")));
+
 
             services.AddScoped<IDbIntilaizer, DbIntilaizer>();
 

@@ -13,5 +13,6 @@ namespace Shared.ErrorDetails
         public int StatusCode { get; set; }
         public string ErrorMessage { get; set; }
         public IEnumerable<ValidationError> Errors { get; set; }
+        public IEnumerable<string>? error { get;  set; }
     }
 }
