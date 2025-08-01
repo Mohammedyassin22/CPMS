@@ -1,4 +1,5 @@
-﻿using Shared.ErrorDetails;
+﻿using Domain.Exceptions;
+using Shared.ErrorDetails;
 
 namespace CPMS.MiddleWare
 {
@@ -37,12 +38,18 @@ namespace CPMS.MiddleWare
             };
             response.StatusCode = ex switch
             {
+                UnAuthorizedException => StatusCodes.Status401Unauthorized,
+                ValidationException => HandlingValidationException((ValidationException)ex, response),
                 _ => StatusCodes.Status500InternalServerError
             };
             context.Response.StatusCode = response.StatusCode;
             await context.Response.WriteAsJsonAsync(response);
         }
-
+        private static int HandlingValidationException(ValidationException ex, ErrorDetails response)
+            {
+                response.error = ex.Errors;
+                return StatusCodes.Status400BadRequest;
+            }
         private async Task handlingNotFoundEndPoint(HttpContext context)
         {
             if (context.Response.StatusCode == StatusCodes.Status404NotFound)
@@ -56,5 +63,6 @@ namespace CPMS.MiddleWare
                 await context.Response.WriteAsJsonAsync(response);
             }
         }
+       
     }
 }

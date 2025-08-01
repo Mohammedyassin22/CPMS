@@ -10,5 +10,6 @@ namespace ServiceAbstraction
     {
         IVehicleService VehicleService { get; }
         ICacheService CacheService { get; }
+        IAuthservice AuthService { get; }
     }
 }
