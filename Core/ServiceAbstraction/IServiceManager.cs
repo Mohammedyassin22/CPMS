@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,9 @@ namespace ServiceAbstraction
 {
     public interface IServiceManager
     {
-        IVehicleService VehicleService { get; }
+        IVehicleService<VehicleSpecificationParameter, VehicleDto> VehicleService { get; }
         ICacheService CacheService { get; }
         IAuthservice AuthService { get; }
+        IZoneServices ZoneService { get; }
     }
 }

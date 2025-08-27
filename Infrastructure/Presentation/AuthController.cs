@@ -19,6 +19,7 @@ namespace Presentation
             var user = await serviceManager.AuthService.LoginAsync(loginDto);
             return Ok(user);
         }
+        [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync(RefisterDto refisterDto)
         {
             var user = await serviceManager.AuthService.RegisterAsync(refisterDto);

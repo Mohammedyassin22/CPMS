@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace ServiceAbstraction
 {
-    public interface IVehicleService
+    public interface IVehicleService<TSpec,TDto>
     {
-        Task<PaginationResponse<VehicleDto>> GetAllVehiclesAsync(VehicleSpecificationParameter specvehicle);
-        Task <VehicleDto?> GetVehicleByNumberAsync(string plateNumber);
-        Task <IEnumerable<VehicleDto?>> GetVehicleOwnersAsync(string OwnerName);
-        Task <IEnumerable<VehicleDto?>> GetAllVehicleBTypeAsync(string VehicleType); 
+        Task<IEnumerable<TDto?>> GetAllVehicleBTypeAsync(string VehicleType);
+        Task<PaginationResponse<TDto, TSpec>> GetAllVehiclesAsync(TSpec specvehicle);
+        Task<TDto?> GetVehicleByNumberAsync(string plateNumber);
+        Task<IEnumerable<TDto?>> GetVehicleOwnersAsync(string OwnerName);
     }
 }
