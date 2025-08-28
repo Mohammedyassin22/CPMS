@@ -1,4 +1,5 @@
 ﻿using Domain.Contracts;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees;
@@ -22,6 +23,14 @@ namespace Service.Specification
         {
             Includes.Add(includeExpression);
         }
+
+        private readonly string plateNumber; 
+        public BaseSpecification(string plateNumber)
+        {
+            this.plateNumber = plateNumber;
+        }
+        public Expression<Func<ParkingRecord, bool>> Criteria =>
+            r => r.Vehicle.PlateNumber == plateNumber && r.ExitTime == null;
 
         public Expression<Func<TEntity, object>>? OrderBy { get ; set ; }
         public Expression<Func<TEntity, object>>? OrderByDescending { get; set; }

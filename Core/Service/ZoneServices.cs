@@ -29,7 +29,7 @@ namespace Service
         public async Task<ParkingZoneDto?> GetZoneByZone(string Zone)
         {
             var type = await unitOfWork.GetRebository<ParkingZone, int>()
-                                      .FindAsync(x => x.ZomeNAme == Zone);
+                                      .FindAllAsync(x => x.ZomeNAme == Zone);
             if (type is null)
                 throw new ZoneNotFoundException(Zone);
 

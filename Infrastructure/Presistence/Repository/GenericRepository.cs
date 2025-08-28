@@ -41,7 +41,7 @@ namespace Presistence.Repository
             return await dbContext.Set<TEntity>().FindAsync(Id);
         }
 
-        public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity?> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }

@@ -13,5 +13,6 @@ namespace ServiceAbstraction
         ICacheService CacheService { get; }
         IAuthservice AuthService { get; }
         IZoneServices ZoneService { get; }
+        IParkingRecordServices ParkingRecordService { get; }
     }
 }

@@ -17,21 +17,22 @@ namespace Presentation
     [Route("api/[controller]")]
     public class ZoneController(IServiceManager serviceManager):ControllerBase
     {
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<ParkingZoneDto, ZoneSpecificationParameter>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
-        public async Task<PaginationResponse<ParkingZoneDto, ZoneSpecificationParameter>> GetAllZone(ZoneSpecificationParameter parameter)
+        public async Task<ActionResult<PaginationResponse<ParkingZoneDto, ZoneSpecificationParameter>>> GetAllZone(ZoneSpecificationParameter parameter)
         {
             var result=await serviceManager.ZoneService.GetAllZone(parameter);
             return result;
         }
-
+        [HttpGet("zone")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<ParkingZoneDto, ZoneSpecificationParameter>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
-        public async Task<ParkingZoneDto?> GetZoneByZone(string Zone)
+        public async Task<ActionResult<ParkingZoneDto?>> GetZoneByZone(string Zone)
         {
            var result=await serviceManager.ZoneService.GetZoneByZone(Zone);
             return result;
