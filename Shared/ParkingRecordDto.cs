@@ -13,7 +13,7 @@ namespace Shared
         public DateTime EntryTime { get; set; }
         public DateTime ExitTime { get; set; }
         public string ZoneName { get; set; }
-        public int PlateNumber { get; set; }
+        public string PlateNumber { get; set; }
         public int invoiceId { get; set; }
     }
 }

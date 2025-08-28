@@ -23,6 +23,8 @@ namespace CPMS.Extantion
            services.AddScoped<IServiceManager, ServiceManager>();
            services.AddAutoMapper(typeof(MappingAssemblyReference).Assembly);
          
+            services.AddApplicationServices(configuration);
+
            services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = context =>
@@ -46,7 +48,7 @@ namespace CPMS.Extantion
             return services;
         }
 
-        public static async Task<WebApplication> configurationmiddleware(this WebApplication app)
+        public static async Task<WebApplication> configurationmiddleware(this WebApplication app) 
         {
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -60,6 +62,7 @@ namespace CPMS.Extantion
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMiddleware<GlobalErrorMiddleWare>();
