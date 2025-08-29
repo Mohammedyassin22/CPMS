@@ -23,5 +23,7 @@ namespace Service
         public IZoneServices ZoneService { get; } =new ZoneServices(unitOfWork,mapper);
 
         public IParkingRecordServices ParkingRecordService { get; }=new ParkingRecordServices(unitOfWork,mapper);
+
+        public IInvoiceServices invoiceServices { get; } = new InvoiceServices(unitOfWork, mapper);
     }
 }
