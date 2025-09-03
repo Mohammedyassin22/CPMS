@@ -6,6 +6,8 @@ using Shared.ErrorModels;
 using Presistence;
 using CPMS.MiddleWare;
 using Domain;
+using Shared;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace CPMS.Extantion
 {
@@ -22,8 +24,10 @@ namespace CPMS.Extantion
          
            services.AddScoped<IServiceManager, ServiceManager>();
            services.AddAutoMapper(typeof(MappingAssemblyReference).Assembly);
-         
-           services.Configure<ApiBehaviorOptions>(options =>
+
+            services.AddApplicationServices(configuration);
+
+            services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = context =>
                 {
@@ -44,6 +48,30 @@ namespace CPMS.Extantion
                 };
             });
             return services;
+
+            var JwtOptions= configuration.GetSection("JWTOptions").Get<JWTOptions>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+           {
+               options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+               {
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateLifetime = true,
+                   ValidateIssuerSigningKey = true,
+                   ValidIssuer = JwtOptions.Issuer,
+                   ValidAudience = JwtOptions.Audience,
+                   IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                       System.Text.Encoding.UTF8.GetBytes(JwtOptions.SecreteKey)
+                   ),
+                   ClockSkew = TimeSpan.Zero
+               };
+           });
+
         }
 
         public static async Task<WebApplication> configurationmiddleware(this WebApplication app)
@@ -60,6 +88,7 @@ namespace CPMS.Extantion
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMiddleware<GlobalErrorMiddleWare>();

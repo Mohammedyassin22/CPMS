@@ -11,5 +11,6 @@ namespace ServiceAbstraction
     {
         Task<UserResultDto>LoginAsync(LoginDto loginDto);
         Task<UserResultDto> RegisterAsync(RefisterDto refisterDto);
+
     }
 }
