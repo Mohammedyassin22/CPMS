@@ -11,6 +11,7 @@ namespace Domain.Models.Identity
     public class AppUsers:IdentityUser
     {
         public string DisplayName { get; set; } 
-        public Address Address { get; set; } 
+        public Address Address { get; set; }
+        public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
     }
 }

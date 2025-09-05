@@ -1,4 +1,5 @@
-﻿using Domain.Exceptions;
+﻿using AutoMapper;
+using Domain.Exceptions;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using ServiceAbstraction;
 using Shared;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -16,8 +18,51 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-    public class Authservice(UserManager<AppUsers>userManager,IOptions<JWTOptions>options) : IAuthservice
+    public class Authservice(UserManager<AppUsers>userManager,IOptions<JWTOptions>options,IMapper mapper) : IAuthservice
     {
+        public async Task<bool> CheckEmailExistAsync(string email)
+        {
+            var result= userManager.FindByEmailAsync(email);
+            return result != null;
+        }
+
+        public async Task<AddressDto> GetCurrentUserAddress(string email)
+        {
+          var user=await userManager.Users.Include(x=>x.Address).FirstOrDefaultAsync(x=>x.Email==email);
+            if(user is null)
+            {
+                throw new UserNotFoundException($"User with email {email} not found.");
+            }
+           var result=mapper.Map<AddressDto>(user.Address);
+            return result;
+        }
+
+        public async Task<UserResultDto> GetCurrentUserAsync(string email)
+        {
+            var result = await userManager.FindByEmailAsync(email);
+            if (result is null)
+            {
+                throw new UserNotFoundException($"User with email {email} not found");
+            }
+            return new UserResultDto()
+            {
+                DisplayName = result.DisplayName,
+                Email = result.Email,
+                Token = await GenerateToken(result)
+            };
+        }
+
+        public async Task<List<InvoiceDto>> GetUserInvoicesAsync(string email)
+        {
+            var user = userManager.Users.Include(x => x.Invoices).FirstOrDefault(x => x.Email == email);
+            if (user is null)
+            {
+                throw new UserNotFoundException($"User with email {email} not found.");
+            }
+            var result = mapper.Map<List<InvoiceDto>>(user.Invoices);
+            return result;
+        }
+
         public async Task<UserResultDto> LoginAsync(LoginDto loginDto)
         {
             var result=await userManager.FindByEmailAsync(loginDto.Email);
@@ -60,6 +105,29 @@ namespace Service
             };
         }
 
+        public async Task<AddressDto> UpdateUserAddress(string email, AddressDto address)
+        {
+            var user = await userManager.Users.Include(x => x.Address).FirstOrDefaultAsync(x => x.Email == email);
+            if (user is null)
+            {
+                throw new UserNotFoundException($"User with email {email} not found.");
+            }
+            if(user.Address is not null)
+            {
+                user.Address.FirstName = address.FirstName;
+                user.Address.LastName = address.LastName;
+            user.Address.PhoneNumber= address.PhoneNumber;
+                user.Address.Street = address.Street;
+                user.Address.city = address.city;
+            }
+            else
+            {
+                var addressRecord = mapper.Map<Address>(address);
+                user.Address = addressRecord;
+            }
+            return address;
+        }
+
         private async Task<string> GenerateToken(AppUsers user)
         {
             var jwtoptions=options.Value;
@@ -85,5 +153,7 @@ namespace Service
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
+
     }
 }
