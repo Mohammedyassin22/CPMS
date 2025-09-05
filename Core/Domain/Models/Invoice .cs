@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,7 @@ namespace Domain.Models
         public int ParckingRecordId { get; set; }
         public ParkingRecord ParckingRecord {  get; set; }
         public Payment payment { get; set; }
+        public string UserId { get; set; }
+        public AppUsers User { get; set; }
     }
 }
