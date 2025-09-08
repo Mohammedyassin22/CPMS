@@ -18,12 +18,14 @@ namespace Service
     {
         public IVehicleService<VehicleSpecificationParameter, VehicleDto> VehicleService { get; }= new VehicleService(unitOfWork, mapper);
         public ICacheService CacheService { get; } = new CacheServices(repository);
-        public IAuthservice AuthService { get; }=new Authservice(userManager,options);
+        public IAuthservice AuthService { get; }=new Authservice(userManager,options,mapper);
 
         public IZoneServices ZoneService { get; } =new ZoneServices(unitOfWork,mapper);
 
         public IParkingRecordServices ParkingRecordService { get; }=new ParkingRecordServices(unitOfWork,mapper);
 
         public IInvoiceServices invoiceServices { get; } = new InvoiceServices(unitOfWork, mapper);
+
+        public IPamentServices PaymentService { get; } = new PaymentServices(unitOfWork, mapper,configuration);
     }
 }

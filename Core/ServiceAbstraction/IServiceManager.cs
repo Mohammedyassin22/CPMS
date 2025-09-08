@@ -15,5 +15,6 @@ namespace ServiceAbstraction
         IZoneServices ZoneService { get; }
         IParkingRecordServices ParkingRecordService { get; }
         IInvoiceServices invoiceServices { get; }
+        IPamentServices PaymentService { get; }
     }
 }

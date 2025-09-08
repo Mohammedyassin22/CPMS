@@ -19,9 +19,10 @@ namespace Presentation
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
-        public async Task<IActionResult> GetGenerateInvoice(ParkingRecordDto record, TariffsDto tariff)
+        [HttpPost("GenerateInvoice")]
+        public async Task<IActionResult> GetGenerateInvoice(GenerateInvoiceRequest request)
         {
-            var result = await serviceManager.invoiceServices.GenerateInvoice(record,tariff);
+            var result = await serviceManager.invoiceServices.GenerateInvoice(request.Record,request.Tariff);
             return Ok(result);
         }
 
@@ -29,6 +30,7 @@ namespace Presentation
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
+        [HttpGet]
         public async Task<IActionResult> GetAllInvoicesAsync([FromQuery] InvoiceSpecificationParameter parameter)
         {
             var result = await serviceManager.invoiceServices.GetAllInvoicesAsync(parameter);
@@ -39,6 +41,7 @@ namespace Presentation
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
+        [HttpGet("{invoiceId}")]
         public async Task<IActionResult> GetInvoiceByIdAsync(int invoiceId)
         {
             var result = await serviceManager.invoiceServices.GetInvoiceByIdAsync(invoiceId);
