@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Shared
+{
+    public class SignUpDto
+    {
+        public string DisplayName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+        public string password { get; set; }
+        public string ConfirmPassword { get; set; }
+        public string city { get; set; }
+        public string Street { get; set; }
+    }
+}

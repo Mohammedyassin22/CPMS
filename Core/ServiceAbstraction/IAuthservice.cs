@@ -17,7 +17,7 @@ namespace ServiceAbstraction
         Task<AddressDto> GetCurrentUserAddress(string email);
         Task<AddressDto> UpdateUserAddress(string email,AddressDto address);
         Task<List<InvoiceDto>> GetUserInvoicesAsync(string email);
-
-
+        Task<UserResultDto>LogoutAsync();
+        Task<string> ResetePassword(ResetePasswordDto Dto);
     }
 }

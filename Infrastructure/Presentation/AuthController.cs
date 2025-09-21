@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Domain.Models;
+using Domain.Models.Identity;
+using Domain.SecurityModules;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
@@ -13,7 +17,7 @@ namespace Presentation
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController(IServiceManager serviceManager): ControllerBase
+    public class AuthController(IServiceManager serviceManager,UserManager<IdentityUser>userManager): ControllerBase
     {
         [HttpPost("login")] 
         public async Task<IActionResult> LoginAsync(LoginDto loginDto)
@@ -21,6 +25,7 @@ namespace Presentation
             var user = await serviceManager.AuthService.LoginAsync(loginDto);
             return Ok(user);
         }
+
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync(RefisterDto refisterDto)
         {
@@ -28,10 +33,40 @@ namespace Presentation
             return Ok(user);
         }
 
-        [HttpGet("EmailExist")]
-        public async Task<IActionResult> CheckEmailExistAsync( string email)
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutAsync()
         {
-            var result = await serviceManager.AuthService.CheckEmailExistAsync(email);
+            await serviceManager.AuthService.LogoutAsync();
+            return Ok();
+        }
+
+        [HttpPost("ForgetPassword")]
+        public async Task<IActionResult> ForgetPasswordAsync(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+                return BadRequest("User not found");
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            var url = Url.Action("ResetPassword", "Auth", new { email = email, token = token }, Request.Scheme);
+
+            var emailRequest = new Email
+            {
+                To = email,
+                Subject = "Reset Password",
+                Body = $"Click the link to reset your password: {url}"
+            };
+
+            EmailSetting.SendEmail(emailRequest);
+
+            return Ok("Reset link has been sent to your email");
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetePasswordDto Dto)
+        {
+            var result = await serviceManager.AuthService.ResetePassword(Dto);
             return Ok(result);
         }
 
@@ -44,7 +79,7 @@ namespace Presentation
             return Ok(user);
         }
 
-        [HttpGet("address")]
+        [HttpGet("currentaddress")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUserAddress(string email)
         {
@@ -68,6 +103,13 @@ namespace Presentation
         {
             var address = User.FindFirstValue(ClaimTypes.Email);
             var result = await serviceManager.AuthService.GetUserInvoicesAsync(email);
+            return Ok(result);
+        }
+        
+        [HttpGet("EmailExist")]
+        public async Task<IActionResult> CheckEmailExistAsync( string email)
+        {
+            var result = await serviceManager.AuthService.CheckEmailExistAsync(email);
             return Ok(result);
         }
     }
