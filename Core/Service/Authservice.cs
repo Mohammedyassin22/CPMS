@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ServiceAbstraction;
 using Shared;
+using Stripe.Forwarding;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -15,10 +16,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.SecurityModules;
+using Domain.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Service
 {
-    public class Authservice(UserManager<AppUsers>userManager,IOptions<JWTOptions>options,IMapper mapper) : IAuthservice
+    public class Authservice(UserManager<AppUsers>userManager,IOptions<JWTOptions>options,IMapper mapper,SignInManager<AppUsers>signInManager) : IAuthservice
     {
         public async Task<bool> CheckEmailExistAsync(string email)
         {
@@ -83,6 +87,18 @@ namespace Service
             };
         }
 
+        public async Task<UserResultDto> LogoutAsync()
+        {
+            await signInManager.SignOutAsync();
+
+            return new UserResultDto
+            {
+                DisplayName = null,  
+                Email = null,
+                Token = null
+            };
+        }
+
         public async Task<UserResultDto> RegisterAsync(RefisterDto refisterDto)
         {
             var user=new AppUsers()
@@ -128,6 +144,7 @@ namespace Service
             return address;
         }
 
+        
         private async Task<string> GenerateToken(AppUsers user)
         {
             var jwtoptions=options.Value;
@@ -154,6 +171,32 @@ namespace Service
 
         }
 
+        public async Task<string> ResetePassword(ResetePasswordDto dto)
+        {
+            var user = await userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+            {
+                throw new UserNotFoundException($"User with email {dto.Email} not found.");
+            }
+            if (string.IsNullOrEmpty(dto.Token))
+            {
+                throw new ArgumentException("Reset token is invalid.");
+            }
 
+            if (dto.Password != dto.ConfirmPassword)
+            {
+                return "Password and ConfirmPassword do not match.";
+            }
+
+            var result = await userManager.ResetPasswordAsync(user, dto.Token, dto.Password);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(" | ", result.Errors.Select(e => e.Description));
+                return $"Reset password failed: {errors}";
+            }
+
+            return "Password has been reset successfully.";
+        }
     }
 }
