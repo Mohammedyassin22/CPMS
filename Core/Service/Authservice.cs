@@ -2,23 +2,14 @@
 using Domain.Exceptions;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ServiceAbstraction;
 using Shared;
-using Stripe.Forwarding;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Domain.SecurityModules;
-using Domain.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Service
 {
