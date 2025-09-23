@@ -24,5 +24,7 @@ namespace Service
         public IPamentServices PaymentService { get; } = new PaymentServices(unitOfWork, mapper,configuration);
 
         public IRoleServices RoleService { get; }=new RoleServices(roleManager,mapper);
+
+        public ITariffServices TariffService => throw new NotImplementedException();
     }
 }
