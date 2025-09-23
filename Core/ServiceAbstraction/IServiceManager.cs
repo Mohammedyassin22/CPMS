@@ -17,5 +17,6 @@ namespace ServiceAbstraction
         IInvoiceServices invoiceServices { get; }
         IPamentServices PaymentService { get; }
         IRoleServices RoleService { get; }
+        ITariffServices TariffService { get; }
     }
 }
