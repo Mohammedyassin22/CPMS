@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts;
+using Domain.Models;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +10,7 @@ using Shared;
 
 namespace Service
 {
-    public class ServiceManager(IUnitOfWork unitOfWork,UserManager<AppUsers>userManagers ,IMapper mapper,ICacheRepository repository,IConfiguration configuration,IOptions<JWTOptions>options,SignInManager<AppUsers>signInManager,RoleManager<IdentityRole>roleManager) : IServiceManager
+    public class ServiceManager(IUnitOfWork unitOfWork,UserManager<AppUsers>userManagers ,IMapper mapper,ICacheRepository repository,IConfiguration configuration,IOptions<JWTOptions>options,SignInManager<AppUsers>signInManager,RoleManager<IdentityRole>roleManager,IOptions<MailSetting>options1) : IServiceManager
     {
         public IVehicleService<VehicleSpecificationParameter, VehicleDto> VehicleService { get; }= new VehicleService(unitOfWork, mapper);
         public ICacheService CacheService { get; } = new CacheServices(repository);
@@ -26,5 +27,7 @@ namespace Service
         public IRoleServices RoleService { get; }=new RoleServices(roleManager,mapper);
 
         public ITariffServices TariffService => throw new NotImplementedException();
+
+        public IMailServices MailServices { get; } =new MailServices(options1);
     }
 }
