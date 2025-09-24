@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
@@ -12,7 +13,8 @@ using System.Threading.Tasks;
 namespace Presentation
 {
     [ApiController]
-    [Route("api/[controller]")] 
+    [Route("api/[controller]")]
+    [Authorize]
     public class VehicleController(IServiceManager serviceManager):ControllerBase
     {
         [HttpGet]

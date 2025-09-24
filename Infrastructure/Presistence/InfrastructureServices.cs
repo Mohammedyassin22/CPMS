@@ -1,6 +1,8 @@
 ﻿using Domain;
 using Domain.Contracts;
+using Domain.Models;
 using Domain.Models.Identity;
+using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -35,6 +37,8 @@ namespace Presistence
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection")));
 
+            services.Configure<MailSetting>(configuration.GetSection(nameof(MailSetting)));
+            services.AddScoped<IMailService, MailService>();
 
             services.AddIdentity<AppUsers, IdentityRole>()
     .AddEntityFrameworkStores<CPMS_Identity>()

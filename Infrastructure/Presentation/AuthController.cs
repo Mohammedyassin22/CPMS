@@ -58,7 +58,7 @@ namespace Presentation
                 Body = $"Click the link to reset your password: {url}"
             };
 
-            EmailSetting.SendEmail(emailRequest);
+           serviceManager.AuthService.SendEmailAsync(emailRequest);
 
             return Ok("Reset link has been sent to your email");
         }

@@ -1,4 +1,5 @@
-﻿using Domain.Models.Identity;
+﻿using Domain.Models;
+using Domain.Models.Identity;
 using Shared;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,7 @@ namespace ServiceAbstraction
         Task<List<InvoiceDto>> GetUserInvoicesAsync(string email);
         Task<UserResultDto>LogoutAsync();
         Task<string> ResetePassword(ResetePasswordDto Dto);
+        Task SendEmailAsync(Email email);
     }
+
 }

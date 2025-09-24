@@ -1,5 +1,6 @@
 ﻿using Domain.Exceptions;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
@@ -15,6 +16,7 @@ namespace Presentation
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ZoneController(IServiceManager serviceManager):ControllerBase
     {
         [HttpGet]
