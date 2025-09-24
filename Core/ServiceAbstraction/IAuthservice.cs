@@ -20,7 +20,7 @@ namespace ServiceAbstraction
         Task<List<InvoiceDto>> GetUserInvoicesAsync(string email);
         Task<UserResultDto>LogoutAsync();
         Task<string> ResetePassword(ResetePasswordDto Dto);
-        Task SendEmailAsync(Email email);
+        
     }
 
 }

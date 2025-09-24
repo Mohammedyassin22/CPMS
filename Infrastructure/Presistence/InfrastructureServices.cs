@@ -37,8 +37,7 @@ namespace Presistence
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection")));
 
-            services.Configure<MailSetting>(configuration.GetSection(nameof(MailSetting)));
-            services.AddScoped<IMailService, MailService>();
+           
 
             services.AddIdentity<AppUsers, IdentityRole>()
     .AddEntityFrameworkStores<CPMS_Identity>()
