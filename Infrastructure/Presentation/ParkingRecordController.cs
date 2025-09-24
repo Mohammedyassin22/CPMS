@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
@@ -13,6 +14,7 @@ namespace Presentation
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ParkingRecordController(IServiceManager serviceManager):ControllerBase
     {
         [HttpGet("platnumber")]

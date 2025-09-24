@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Domain.Exceptions;
+using Domain.Models;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MimeKit;
 using ServiceAbstraction;
 using Shared;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,7 +15,7 @@ using System.Text;
 
 namespace Service
 {
-    public class Authservice(UserManager<AppUsers>userManager,IOptions<JWTOptions>options,IMapper mapper,SignInManager<AppUsers>signInManager) : IAuthservice
+    public class Authservice(UserManager<AppUsers>userManager,IOptions<JWTOptions>options,IMapper mapper, SignInManager<AppUsers> signInManager, IOptions<MailSetting>options1) : IAuthservice
     {
         public async Task<bool> CheckEmailExistAsync(string email)
         {
@@ -188,6 +190,21 @@ namespace Service
             }
 
             return "Password has been reset successfully.";
+        }
+
+        public async Task SendEmailAsync(Email email)
+        {
+            var mail=new MimeMessage();
+            mail.Subject = email.Subject;
+            mail.From.Add(new MailboxAddress(options1.Value.DisplayName, options1.Value.Email));
+            mail.To.Add(MailboxAddress.Parse(email.To));
+            var builder = new BodyBuilder();
+            builder.HtmlBody = email.Body;
+            mail.Body = builder.ToMessageBody();
+            using var smtp=new MailKit.Net.Smtp.SmtpClient();
+            smtp.Connect(options1.Value.Host, options1.Value.Port, MailKit.Security.SecureSocketOptions.StartTls);
+            smtp.Authenticate(options1.Value.Email, options1.Value.Password);
+            smtp.Send(mail);
         }
     }
 }

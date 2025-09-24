@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Presentation
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PaymentController(IServiceManager serviceManager): ControllerBase
     {
 
