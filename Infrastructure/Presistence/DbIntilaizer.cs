@@ -1,6 +1,10 @@
 ﻿using Domain;
 using Domain.Models;
+using Domain.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Presistence.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +13,49 @@ using System.Threading.Tasks;
 
 namespace Presistence
 {
-    public class DbIntilaizer(CPMSDbContext dbContext) : IDbIntilaizer
+    public class DbIntilaizer(CPMSDbContext dbContext,CPMS_Identity cPMS_Identity, UserManager<AppUsers> userManager, RoleManager<IdentityRole> roleManager) : IDbIntilaizer
     {
+        private readonly CPMS_Identity dbContexts;
+        public async Task IntializerIdentityAsync()
+        {
+            if(cPMS_Identity.Database.GetPendingMigrations().Any())
+            {
+                await cPMS_Identity.Database.MigrateAsync();
+            }
+
+            if(!userManager.Users.Any())
+            {
+                var SuperAdminUser = new AppUsers()
+                {
+                    DisplayName = "Super Admin",
+                    UserName = "SuperAdmin",
+                    PhoneNumber="01060512789"
+                };
+                var AdminUser = new AppUsers()
+                {
+                    DisplayName = "Admin",
+                    UserName = "Admin",
+                    PhoneNumber = "01111128427"
+                };
+                await userManager.AddToRoleAsync(SuperAdminUser, "SuperAdmin");
+                await userManager.AddToRoleAsync(AdminUser, "Admin");
+                await userManager.CreateAsync(SuperAdminUser, "SuperAdmin@123");
+                await userManager.CreateAsync(AdminUser, "Admin@123");
+            }
+
+            if(roleManager.Roles.Any() == false)
+            {
+                await roleManager.CreateAsync(new IdentityRole()
+                {
+                    Name = "SuperAdmin",
+                });
+                await roleManager.CreateAsync(new IdentityRole()
+                {
+                    Name = "Admin",
+                });
+            }
+        }
+
         public async Task IntilaizerAsync()
         {
             if (dbContext.Database.GetPendingMigrations().Any())

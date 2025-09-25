@@ -11,7 +11,7 @@ namespace Domain.Contracts
     public interface IGenericRebository<TEntity,TKey>where TEntity:BaseEntity<TKey>
     {
         Task<TEntity?> GetAsync(TKey Id);
-        Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity?> FindAllAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllAsync(bool trackchange = false);
 
         Task<TEntity?> GetAsync(ISpecification<TEntity,TKey>spec); 

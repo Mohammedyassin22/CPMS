@@ -9,6 +9,7 @@ namespace Shared
     public class VehicleSpecificationParameter
     {
         public string? type { get; set; }
+        public string? search { get; set; }
         public string? sort { get; set; }
         private int _indexPage = 1;
         private int _pageSize = 20;

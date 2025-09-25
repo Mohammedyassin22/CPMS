@@ -1,10 +1,15 @@
+using CPMS.Extantion;
+using CPMS.MiddleWare;
 using Domain;
 using Domain.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Presistence;
+using Presistence.Repository;
 using Service;
 using ServiceAbstraction;
+using Shared.ErrorModels;
 using System.Reflection;
 
 namespace CPMS
@@ -17,39 +22,13 @@ namespace CPMS
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<CPMSDbContext>(option =>
-            {
-                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            builder.Services.Register(builder.Configuration);
+           
 
-            builder.Services.AddScoped<IDbIntilaizer, DbIntilaizer>();
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
-            builder.Services.AddAutoMapper(typeof(MappingAssemblyReference).Assembly);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-            using var scope = app.Services.CreateScope();
-            var dbintilaizer = scope.ServiceProvider.GetService<IDbIntilaizer>();
-            await dbintilaizer.IntilaizerAsync();
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
+           await app.configurationmiddleware();
 
             app.Run();
         }
