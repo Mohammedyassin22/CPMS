@@ -1,12 +1,5 @@
 ﻿using Domain.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.CommandTrees;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Specification
 {

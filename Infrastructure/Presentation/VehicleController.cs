@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
@@ -12,11 +13,12 @@ using System.Threading.Tasks;
 namespace Presentation
 {
     [ApiController]
-    [Route("api/[controller]")] 
+    [Route("api/[controller]")]
+    [Authorize]
     public class VehicleController(IServiceManager serviceManager):ControllerBase
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK,Type=typeof(PaginationResponse<VehicleDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK,Type=typeof(PaginationResponse<VehicleDto, VehicleSpecificationParameter>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError,Type =typeof(ErrorDetails))]
         public async Task<IActionResult> GetAllVehcile([FromQuery]VehicleSpecificationParameter specvehicle)
@@ -27,7 +29,7 @@ namespace Presentation
         }
 
         [HttpGet("Type")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<VehicleTypeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<VehicleTypeDto, VehicleSpecificationParameter>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
@@ -38,11 +40,10 @@ namespace Presentation
         }
 
         [HttpGet("PlatNumber")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<VehicleDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<VehicleDto, VehicleSpecificationParameter>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
-
         public async Task<ActionResult<VehicleDto>> GetAllByNumber(string PlatNumber)
         {
             var result = await serviceManager.VehicleService.GetVehicleByNumberAsync(PlatNumber);
@@ -50,7 +51,7 @@ namespace Presentation
         }
 
         [HttpGet("Owner")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<VehicleTypeDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationResponse<VehicleTypeDto, VehicleSpecificationParameter>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]

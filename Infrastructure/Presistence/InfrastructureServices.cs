@@ -1,11 +1,17 @@
 ﻿using Domain;
 using Domain.Contracts;
+using Domain.Models;
+using Domain.Models.Identity;
+using MailKit;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Presistence.Identity;
 using Presistence.Repository;
+using Service;
+using ServiceAbstraction;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -31,7 +37,13 @@ namespace Presistence
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection")));
 
+           
 
+            services.AddIdentity<AppUsers, IdentityRole>()
+    .AddEntityFrameworkStores<CPMS_Identity>()
+    .AddDefaultTokenProviders();
+
+            services.AddScoped<IZoneServices, ZoneServices>();
             services.AddScoped<IDbIntilaizer, DbIntilaizer>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

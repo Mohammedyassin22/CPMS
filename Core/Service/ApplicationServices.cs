@@ -16,7 +16,11 @@ namespace Service
         {
             services.AddScoped<IServiceManager, ServiceManager>();
             services.AddAutoMapper(typeof(MappingAssemblyReference).Assembly);
+
             services.Configure<JWTOptions>(configuration.GetSection("JWTOtions"));
+
+=======
+            services.Configure<JWTOptions>(configuration.GetSection("JWTOptions"));
 
             return services;
         }

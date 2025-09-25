@@ -7,9 +7,9 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Shared
 {
-    public class PaginationResponse<TENtity>
+    public class PaginationResponse<TENtity,TSpec>
     {
-        public PaginationResponse(VehicleSpecificationParameter specvehicle, int pageindex, int pagesize, int totalcount, IEnumerable<TENtity> data)
+        public PaginationResponse(TSpec specvehicle, int pageindex, int pagesize, int totalcount, IEnumerable<TENtity> data)
         {
             PageIndex = pageindex;
             PageSize = pagesize;

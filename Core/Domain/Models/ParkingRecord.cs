@@ -11,6 +11,7 @@ namespace Domain.Models
         public DateTime EntryTime { get; set; }
         public DateTime ExitTime { get; set; }
         public ParkingZone ZoneId { get; set; }
+
         public int VehicleId { get; set; }         
         public Vehicle Vehicle { get; set; }    
         public Invoice invoice { get; set; }

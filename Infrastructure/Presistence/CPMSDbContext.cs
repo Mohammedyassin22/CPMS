@@ -1,7 +1,8 @@
 ﻿using Domain.Models;
 using Domain.Models.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
