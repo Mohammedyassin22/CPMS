@@ -13,6 +13,9 @@ namespace ServiceAbstraction
     {
         Task<UserResultDto>LoginAsync(LoginDto loginDto);
         Task<UserResultDto> RegisterAsync(RefisterDto refisterDto);
+
+
+
         Task<bool>CheckEmailExistAsync(string email);
         Task<UserResultDto>GetCurrentUserAsync(string email);
         Task<AddressDto> GetCurrentUserAddress(string email);
@@ -21,6 +24,7 @@ namespace ServiceAbstraction
         Task<UserResultDto>LogoutAsync();
         Task<string> ResetePassword(ResetePasswordDto Dto);
         
+
     }
 
 }
